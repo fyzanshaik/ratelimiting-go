@@ -110,3 +110,9 @@ func (tb *TokenBucket) SetRate(newRate float64) {
 	tb.refill()
 	tb.rate = newRate
 }
+
+func (tb *TokenBucket) LastAccessed() time.Time {
+	tb.mutex.Lock()
+	defer tb.mutex.Unlock()
+	return tb.lastRefill
+}

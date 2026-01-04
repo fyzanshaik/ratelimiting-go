@@ -25,7 +25,7 @@ func main() {
 	})
 
 	mux.HandleFunc("/api/status", func(w http.ResponseWriter, r *http.Request) {
-		clientIP := r.RemoteAddr
+		clientIP := middleware.GetClientIP(r)
 		capacity, rate, tokens := limiter.GetMetrics(clientIP)
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintf(w, `{"capacity": %.2f, "rate": %.2f, "available_tokens": %.2f}`, capacity, rate, tokens)

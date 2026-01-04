@@ -2,6 +2,7 @@ package ratelimiter
 
 import (
 	"sync"
+	"time"
 )
 
 type RateLimiter struct {
@@ -12,10 +13,26 @@ type RateLimiter struct {
 }
 
 func NewRateLimiter(capacity, rate float64) *RateLimiter {
-	return &RateLimiter{
+	rl := &RateLimiter{
 		buckets:  make(map[string]*TokenBucket),
 		capacity: capacity,
 		rate:     rate,
+	}
+
+	go rl.cleanupLoop()
+	return rl
+}
+
+func (rl *RateLimiter) cleanupLoop() {
+	ticker := time.NewTicker(1 * time.Minute)
+	for range ticker.C {
+		rl.mu.Lock()
+		for id, bucket := range rl.buckets {
+			if time.Since(bucket.LastAccessed()) > 5*time.Minute {
+				delete(rl.buckets, id)
+			}
+		}
+		rl.mu.Unlock()
 	}
 }
 

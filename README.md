@@ -10,6 +10,11 @@ Token bucket algorithm: each client gets a bucket with tokens. Every request con
 2. **RateLimiter** - Manages buckets per client (by IP)
 3. **Middleware** - HTTP wrapper that checks limits before handling requests
 
+## Features & Behavior
+
+- **Client Identification**: correctly identifies clients by IP address, stripping ports and respecting `X-Forwarded-For` / `X-Real-IP` headers for proxy support.
+- **Memory Management**: includes an automatic cleanup process. Buckets that have been inactive for more than 5 minutes are removed every minute to prevent memory leaks.
+
 ## Usage
 
 ```bash
