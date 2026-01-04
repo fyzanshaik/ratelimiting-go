@@ -5,9 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/fyzanshaik/ratelimiting-go/ratelimiter"
-
 	"github.com/fyzanshaik/ratelimiting-go/middleware"
+	"github.com/fyzanshaik/ratelimiting-go/ratelimiter"
 )
 
 func main() {
